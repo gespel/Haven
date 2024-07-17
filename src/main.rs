@@ -11,7 +11,7 @@ impl HavenWriter {
     fn new(project_name: &str) -> HavenWriter {
         HavenWriter {
             project_name: project_name.to_string().clone(),
-            dockerfile: LineWriter::new(File::create(project_name.to_string()).expect("Cannot create Dockerfile")),
+            dockerfile: LineWriter::new(File::create("Dockerfile").expect("Cannot create Dockerfile")),
         }
     }
 
