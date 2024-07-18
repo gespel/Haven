@@ -1,4 +1,5 @@
 use std::fs::{File};
+use std::io;
 use std::io::prelude::*;
 use std::io::LineWriter;
 
@@ -25,8 +26,25 @@ impl HavenWriter {
     }
 }
 
-fn main() {
-    let mut hw = HavenWriter::new("Haven");
-    hw.create_dockerfile_rust().expect("Error while writing Dockerfile!");
-    println!("Dockerfile created!\n");
+fn main() -> std::io::Result<()> {
+    let mut projectname = String::new();
+    let mut language = String::new();
+
+    println!("Enter the project name: ");
+    io::stdin().read_line(&mut projectname)?;
+    let mut hw = HavenWriter::new(projectname.as_str());
+    println!("Enter the project language: ");
+    io::stdin().read_line(&mut language)?;
+
+    match language.as_str().strip_suffix("\n").expect("Error while parsing input buffer!") {
+        "rust" => {
+            hw.create_dockerfile_rust().expect("Error while creating Dockerfile");
+            println!("Dockerfile created!\n");
+        }
+        _ => {}
+    }
+
+    //hw.create_dockerfile_rust().expect("Error while writing Dockerfile!");
+
+    Ok(())
 }
