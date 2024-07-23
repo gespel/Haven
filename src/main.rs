@@ -91,8 +91,6 @@ fn main() -> std::io::Result<()> {
         Language::UNKOWN => {}
     }
 
-
-
     /*match language.as_str().strip_suffix("\n").expect("Error while parsing input buffer!") {
         "rust" => {
             hw.create_dockerfile_rust().expect("Error while creating Dockerfile");
@@ -102,8 +100,6 @@ fn main() -> std::io::Result<()> {
     }*/
 
     //hw.create_dockerfile_rust().expect("Error while writing Dockerfile!");
-
-
 
     Ok(())
 }
