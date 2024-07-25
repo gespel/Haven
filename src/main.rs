@@ -69,6 +69,17 @@ impl HavenWriter {
         self.dockerfile.write_all(format!("CMD [\"./target/release/{project_name}\"]\n\n").as_bytes())?;
         Ok(())
     }
+
+    fn create_dockerfile_python(&mut self) -> std::io::Result<()> {
+        let project_name = self.project_name.as_str();
+        self.dockerfile.write_all(b"FROM python:3.12\n\n")?;
+        self.dockerfile.write_all(b"WORKDIR /app\n\n")?;
+        self.dockerfile.write_all(b"COPY requirements.txt requirements.txt\n\n")?;
+        self.dockerfile.write_all(b"RUN pip install -r requirements.txt\n\n")?;
+        self.dockerfile.write_all(b"COPY . .\n\n")?;
+        self.dockerfile.write_all(format!("CMD [\"python3\", \"{project_name}\"]\n\n").as_bytes())?;
+        Ok(())
+    }
 }
 
 fn main() -> std::io::Result<()> {
@@ -77,7 +88,7 @@ fn main() -> std::io::Result<()> {
     let lang = hs.scan();
     println!("Scanned current directory and found {:?} as primary language.", lang);
 
-    println!("Enter the project name: ");
+    println!("Enter entrypoint: ");
     io::stdin().read_line(&mut projectname)?;
     let mut hw = HavenWriter::new(projectname.as_str().strip_suffix("\n").unwrap());
 
@@ -85,7 +96,9 @@ fn main() -> std::io::Result<()> {
         Language::RUST => {
             hw.create_dockerfile_rust().expect("");
         }
-        Language::PYTHON => {}
+        Language::PYTHON => {
+            hw.create_dockerfile_python().expect("");
+        }
         Language::CLANG => {}
         Language::CPPLANG => {}
         Language::UNKOWN => {}
